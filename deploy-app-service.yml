@@ -14,17 +14,30 @@ resources:
       name: AnotherRedbeard/TheOneYamlAzDO
 
 #jobs:
-#- template: common.yml@templates  # Template referenc
+#- template: common.yml@templates  # Template reference
 
-pool:
-  vmImage: ubuntu-latest
+stages:
+- stage: 'Build Stage'
+  jobs:
+  - job: 'Build-app-service'
+    pool:
+      vmImage: ubuntu-latest
 
-steps:
-- template: tasks/hello-world.yaml@templates
-  parameters:
-    command: 'this is the command'
+    steps:
+    - template: tasks/hello-world.yaml@templates
+      parameters:
+        command: 'this is the command'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    - script: |
+        echo Add other tasks to build, test, and deploy your project.
+        echo See https://aka.ms/yaml
+      displayName: 'Run a multi-line script'
+  - deployment: 'Deploy-to-Dev'
+    pool:
+      vmImage: ubuntu-latest
+    environment: dev
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - script: echo Hi!
