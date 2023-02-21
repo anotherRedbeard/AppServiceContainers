@@ -20,7 +20,7 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
-- template: tasks/hello-world.yaml
+- template: ./tasks/hello-world.yaml
   parameters:
     command: 'this is the command'
 
