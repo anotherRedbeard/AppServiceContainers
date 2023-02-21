@@ -9,6 +9,7 @@ trigger:
 resources:
   repositories:
     - repository: templates
+      endpoint: AnotherRedbeard
       type: github
       name: AnotherRedbeard/TheOneYamlAzDO
 
