@@ -13,7 +13,7 @@ variables:
   resourceGroupName: 'red-scus-appservicedemo-dev'
   location: 'southcentralus'
   templateFile: 'main.bicep'
-  appServicePostfix: 'todoapi'
+  appServicePostfix: 'todoapict'
   appServiceSKU: 'B1'
 
 resources:
