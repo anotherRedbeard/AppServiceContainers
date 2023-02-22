@@ -17,9 +17,9 @@ resources:
 #- template: common.yml@templates  # Template reference
 
 stages:
-- stage: 'Build-Stage'
+- stage: 'Build_Stage'
   jobs:
-  - job: 'Build-app-service'
+  - job: 'Build_app_service'
     pool:
       vmImage: ubuntu-latest
 
