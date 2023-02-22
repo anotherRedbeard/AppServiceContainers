@@ -32,7 +32,7 @@ stages:
         echo Add other tasks to build, test, and deploy your project.
         echo See https://aka.ms/yaml
       displayName: 'Run a multi-line script'
-  - deployment: 'Deploy-to-Dev'
+  - deployment: 'Deploy_to_Dev'
     pool:
       vmImage: ubuntu-latest
     environment: dev
