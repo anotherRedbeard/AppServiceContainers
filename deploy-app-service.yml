@@ -10,6 +10,7 @@ name: Build and Deploy Todo App Service
 
 variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
+  azureContainerRegistryConnection: 'AppServiceDeploymentDemoACR'
   resourceGroupName: 'red-scus-appservicedemo-dev'
   location: 'southcentralus'
   templateFile: 'main.bicep'
@@ -73,7 +74,7 @@ stages:
     - task: Docker@2
       displayName: Build and Push image
       inputs:
-        containerRegistry: value-wire-acr-connection
+        containerRegistry: ${{ variables.azureContainerRegistryConnection }}
         repository: ${{ variables.containerImageName }}
         command: buildAndPush
         Dockerfile: $(Build.SourcesDirectory)/src/Dockerfile
