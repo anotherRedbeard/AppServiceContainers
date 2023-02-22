@@ -6,6 +6,16 @@
 trigger:
 - master
 
+name: Build and Deploy Todo App Service
+
+variables:
+  azureServiceConnection: 'AppServiceDeploymentDemo'
+  resourceGroupName: 'red-scus-appservicedemo-dev'
+  location: 'southcentralus'
+  templateFile: 'main.bicep'
+  appServicePostfix: 'todoapi'
+  appServiceSKU: 'B1'
+
 resources:
   repositories:
     - repository: templates
@@ -30,10 +40,18 @@ stages:
       parameters:
         command: 'this is the command'
 
-    - script: |
-        echo Add other tasks to build, test, and deploy your project.
-        echo See https://aka.ms/yaml
-      displayName: 'Run a multi-line script'
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(azureServiceConnection)
+        scriptType: bash
+        scriptLocation: inlineScript
+        useGlobalConfig: false
+        inlineScript: |
+          az --version
+          az group create -l ${{ variables.location }} -n ${{ variables.resourceGroupName}}
+          az deployment group create --resource-group ${{ variables.resourceGroupName }} \
+          --template-file ./iac/main-deploy-app-service.bicep \
+          --parameters app_service_postfix=${{ variables.appServicePostfix }} app_service_sku=${{ variables.appServiceSKU }}
 
 - stage: deploy_stage_dev
   displayName: 'Deploy to dev'
