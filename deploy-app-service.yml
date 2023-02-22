@@ -6,8 +6,6 @@
 trigger:
 - master
 
-name: Build and Deploy Todo App Service
-
 variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
   azureContainerRegistryConnection: 'AppServiceDeploymentDemoACR'
