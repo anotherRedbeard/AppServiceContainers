@@ -15,6 +15,8 @@ variables:
   templateFile: 'main.bicep'
   appServicePostfix: 'todoapict'
   appServiceSKU: 'B1'
+  containerRegistryName: 'redscuspublicctreg01'
+  containerImageName: 'todo-ct-api'
 
 resources:
   repositories:
@@ -27,11 +29,11 @@ resources:
 #- template: common.yml@templates  # Template reference
 
 stages:
-- stage: build_stage
-  displayName: 'build stage'
+- stage: build_infra_stage
+  displayName: 'build infrastructor stage'
   jobs:
   - job: build
-    displayName: 'build app service job'
+    displayName: 'build infrastructor for app service job'
     pool:
       vmImage: ubuntu-latest
 
@@ -55,6 +57,28 @@ stages:
           --template-file ./iac/main-deploy-app-service.bicep \
           --parameters app_service_postfix=${{ variables.appServicePostfix }} app_service_sku=${{ variables.appServiceSKU }}
 
+- stage: build_app_container
+  displayName: 'build app service container stage'
+  jobs:
+  - job: build
+    displayName: 'build app service container job'
+    pool:
+      vmImage: ubuntu-latest
+
+    steps:
+    - checkout: self
+    
+    - task: Docker@2
+      displayName: Build and Push image
+      inputs:
+        containerRegistry: value-wire-acr-connection
+        repository: ${{ variables.IMAGE_NAME }}
+        command: buildAndPush
+        Dockerfile: $(Build.SourcesDirectory)/src/Dockerfile
+        tags: |
+          $(varImageTag)
+          latest
+
 - stage: deploy_stage_dev
   displayName: 'Deploy to dev'
   jobs:
@@ -67,6 +91,16 @@ stages:
         runOnce:
           deploy:
             steps:
+              - task: AzureCLI@2
+                displayName: Get Container Registry Credentials
+                inputs:
+                  azureSubscription: $(SERVICE_CONNECTION_NAME)
+                  scriptType: bash
+                  scriptLocation: inlineScript
+                  inlineScript: |
+                    echo "##vso[task.setvariable issecret=true;variable=ACR_USERNAME]$(az acr credential show -n ${{ parameters.REGISTRY_NAME }} --query username --out tsv)"
+                    echo "##vso[task.setvariable issecret=true;variable=ACR_PASSWORD]$(az acr credential show -n ${{ parameters.REGISTRY_NAME }} --query passwords[0].value --out tsv)"
+
               - script: echo Hi dev!
 
 - stage: deploy_stage_test
