@@ -17,9 +17,11 @@ resources:
 #- template: common.yml@templates  # Template reference
 
 stages:
-- stage: 'Build_Stage'
+- stage: build_stage
+  displayName: 'build stage'
   jobs:
   - job: build
+    displayName: 'build app service job'
     pool:
       vmImage: ubuntu-latest
 
@@ -32,13 +34,17 @@ stages:
         echo Add other tasks to build, test, and deploy your project.
         echo See https://aka.ms/yaml
       displayName: 'Run a multi-line script'
-  - deployment: 'Deploy_to_Dev'
-    dependsOn: build
-    pool:
-      vmImage: ubuntu-latest
-    environment: dev
-    strategy:
-      runOnce:
-        deploy:
-          steps:
-            - script: echo Hi!
+- stage: deploy_stage_dev
+  displayName: 'Deploy to dev'
+  jobs:
+    - deployment: deploy-dev
+      displayName: 'Deploy to dev'
+      dependsOn: build
+      pool:
+        vmImage: ubuntu-latest
+      environment: dev
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+              - script: echo Hi!
