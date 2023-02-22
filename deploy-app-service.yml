@@ -78,7 +78,7 @@ stages:
         command: buildAndPush
         Dockerfile: $(Build.SourcesDirectory)/src/Dockerfile
         tags: |
-          '${{ variables.version }}.$(Build.BuildNumber)'
+          "${{ variables.version }}.$(Build.BuildNumber)"
           latest
 
 - stage: deploy_stage_dev
