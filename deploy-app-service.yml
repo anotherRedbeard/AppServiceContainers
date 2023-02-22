@@ -19,7 +19,7 @@ resources:
 stages:
 - stage: 'Build_Stage'
   jobs:
-  - job: 'Build_app_service'
+  - job: build
     pool:
       vmImage: ubuntu-latest
 
@@ -33,6 +33,7 @@ stages:
         echo See https://aka.ms/yaml
       displayName: 'Run a multi-line script'
   - deployment: 'Deploy_to_Dev'
+    dependsOn: build
     pool:
       vmImage: ubuntu-latest
     environment: dev
