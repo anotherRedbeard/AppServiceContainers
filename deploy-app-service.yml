@@ -64,6 +64,8 @@ stages:
   jobs:
   - job: build
     displayName: 'build app service container job'
+    variables:
+      imageTag: ${{ variables.version }}.$(Build.BuildNumber)
     pool:
       vmImage: ubuntu-latest
 
@@ -78,7 +80,7 @@ stages:
         command: buildAndPush
         Dockerfile: $(Build.SourcesDirectory)/src/Dockerfile
         tags: |
-          "${{ variables.version }}.$(Build.BuildNumber)"
+          $(imageTag)
           latest
 
 - stage: deploy_stage_dev
