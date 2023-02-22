@@ -36,6 +36,8 @@ stages:
       vmImage: ubuntu-latest
 
     steps:
+    - checkout: self
+    
     - template: tasks/hello-world.yaml@templates
       parameters:
         command: 'this is the command'
