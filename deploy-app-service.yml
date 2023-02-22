@@ -37,7 +37,7 @@ stages:
 - stage: deploy_stage_dev
   displayName: 'Deploy to dev'
   jobs:
-    - deployment: deploy-dev
+    - deployment: deploy_dev
       displayName: 'Deploy to dev'
       dependsOn: build
       pool:
