@@ -17,7 +17,7 @@ resources:
 #- template: common.yml@templates  # Template reference
 
 stages:
-- stage: 'Build Stage'
+- stage: 'Build-Stage'
   jobs:
   - job: 'Build-app-service'
     pool:
