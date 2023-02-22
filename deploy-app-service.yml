@@ -18,6 +18,7 @@ variables:
   appServiceSKU: 'B1'
   containerRegistryName: 'redscuspublicctreg01'
   containerImageName: 'todo-ct-api'
+  version: 'v1.0'
   fullImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}'
 
 resources:
