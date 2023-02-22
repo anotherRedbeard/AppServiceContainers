@@ -51,7 +51,7 @@ stages:
       parameters:
         azureSubscriptionName: ${{ variables.azureServiceConnection}}
         templateFileName: '$(Pipeline.Workspace)/${{ variables.templateFileName }}.bicep'
-        parametersFileName: '$(Pipeline.Workspace)/parameters/${{ variables.environmentName }}.${{ variables.regionAbrv }}.${{ templateFileName }}.parameters.json'
+        parametersFileName: '$(Pipeline.Workspace)/parameters/${{ variables.environmentName }}.${{ variables.regionAbrv }}.${{ variables.templateFileName }}.parameters.json'
         command: 'create'
         additionalArguments: '--out yamlc'
         deploymentName: ${{ variables.deploymentName }}
