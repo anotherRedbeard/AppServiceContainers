@@ -20,6 +20,7 @@ variables:
   containerImageName: 'todo-ct-api'
   version: 'v1.0'
   fullImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}'
+  System.Debug: true
 
 resources:
   repositories:
@@ -45,7 +46,7 @@ stages:
     
     - template: tasks/hello-world.yaml@templates
       parameters:
-        command: 'this is the command'
+        command: $(Build.BuildNumber)
 
     - task: AzureCLI@2
       inputs:
@@ -79,7 +80,7 @@ stages:
         command: buildAndPush
         Dockerfile: $(Build.SourcesDirectory)/src/Dockerfile
         tags: |
-          '${{ variables.version }}.$(Build.BuildNumber)'
+          '${{ variables.version }}.$(Rev:.r)'
           latest
 
 - stage: deploy_stage_dev
