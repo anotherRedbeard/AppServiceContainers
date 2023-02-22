@@ -39,7 +39,6 @@ stages:
   jobs:
     - deployment: deploy_dev
       displayName: 'Deploy to dev'
-      dependsOn: build
       pool:
         vmImage: ubuntu-latest
       environment: dev
