@@ -19,7 +19,6 @@ variables:
   containerRegistryName: 'redscuspublicctreg01'
   containerImageName: 'todo-ct-api'
   fullImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}'
-  imageTag: '${{ variables.version }}.$(Build.BuildNumber)'
 
 resources:
   repositories:
@@ -79,7 +78,7 @@ stages:
         command: buildAndPush
         Dockerfile: $(Build.SourcesDirectory)/src/Dockerfile
         tags: |
-          $(imageTag)
+          '${{ variables.version }}.$(Build.BuildNumber)'
           latest
 
 - stage: deploy_stage_dev
