@@ -17,6 +17,8 @@ variables:
   appServiceSKU: 'B1'
   containerRegistryName: 'redscuspublicctreg01'
   containerImageName: 'todo-ct-api'
+  fullImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}'
+  imageTag: '${{ variables.version }}.$(Build.BuildNumber)'
 
 resources:
   repositories:
@@ -72,11 +74,11 @@ stages:
       displayName: Build and Push image
       inputs:
         containerRegistry: value-wire-acr-connection
-        repository: ${{ variables.IMAGE_NAME }}
+        repository: ${{ variables.containerImageName }}
         command: buildAndPush
         Dockerfile: $(Build.SourcesDirectory)/src/Dockerfile
         tags: |
-          $(varImageTag)
+          $(imageTag)
           latest
 
 - stage: deploy_stage_dev
@@ -94,12 +96,12 @@ stages:
               - task: AzureCLI@2
                 displayName: Get Container Registry Credentials
                 inputs:
-                  azureSubscription: $(SERVICE_CONNECTION_NAME)
+                  azureSubscription: ${{ variables.azureServiceConnection }}
                   scriptType: bash
                   scriptLocation: inlineScript
                   inlineScript: |
-                    echo "##vso[task.setvariable issecret=true;variable=ACR_USERNAME]$(az acr credential show -n ${{ parameters.REGISTRY_NAME }} --query username --out tsv)"
-                    echo "##vso[task.setvariable issecret=true;variable=ACR_PASSWORD]$(az acr credential show -n ${{ parameters.REGISTRY_NAME }} --query passwords[0].value --out tsv)"
+                    echo "##vso[task.setvariable issecret=true;variable=ACR_USERNAME]$(az acr credential show -n ${{ variables.containerRegistryName }} --query username --out tsv)"
+                    echo "##vso[task.setvariable issecret=true;variable=ACR_PASSWORD]$(az acr credential show -n ${{ variables.containerRegistryName }} --query passwords[0].value --out tsv)"
 
               - script: echo Hi dev!
 
