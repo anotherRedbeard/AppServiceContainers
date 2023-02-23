@@ -42,7 +42,7 @@ stages:
 
     steps:
     - checkout: self
-    - script: ls -ltr $(BuildSourcesDirectory)/iac
+    - script: ls -ltr $(BuildSourcesDirectory)
     
     - template: tasks/hello-world.yaml@templates
       parameters:
