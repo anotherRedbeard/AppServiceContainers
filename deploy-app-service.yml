@@ -63,6 +63,7 @@ stages:
         command: 'create'
         additionalArguments: '--out yamlc'
         deploymentName: ${{ variables.deploymentName }}
+        resourceGroupName: ${{ variables.resourceGroupName }}
 
 - stage: build_app_container
   displayName: 'build app service container stage'
