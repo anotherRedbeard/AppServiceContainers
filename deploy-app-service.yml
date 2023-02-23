@@ -14,7 +14,7 @@ variables:
   templateFileName: 'app-service'
   environmentName: 'dev'
   regionAbrv: 'scus'
-  deploymentName: 'App Service Container'
+  deploymentName: 'App_Service_Deployments'
   containerRegistryName: 'redscuspublicctreg01'
   containerImageName: 'todo-ct-api'
   version: 'v1.0'
@@ -43,8 +43,6 @@ stages:
     steps:
     - checkout: self
 
-    - script: ls -ltr $(Build.SourcesDirectory)/iac/${{ variables.templateFileName }}.bicep
-    
     - template: tasks/hello-world.yaml@templates
       parameters:
         command: $(Build.BuildNumber)
