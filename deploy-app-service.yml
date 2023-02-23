@@ -50,12 +50,14 @@ stages:
     - template: tasks/azcli-group-task.yaml@templates
       parameters:
         azureSubscriptionName: ${{ variables.azureServiceConnection}}
+        location: ${{ variables.location }}
         command: 'create'
         resourceGroupName: ${{ variables.resourceGroupName }}
 
     - template: tasks/azcli-deployment-group-task.yaml@templates
       parameters:
         azureSubscriptionName: ${{ variables.azureServiceConnection}}
+        location: ${{ variables.location }}
         templateFileName: '$(Pipeline.Workspace)/${{ variables.templateFileName }}.bicep'
         parametersFileName: '$(Pipeline.Workspace)/parameters/${{ variables.environmentName }}.${{ variables.regionAbrv }}.${{ variables.templateFileName }}.parameters.json'
         command: 'create'
