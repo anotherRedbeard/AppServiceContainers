@@ -46,8 +46,14 @@ stages:
     - template: tasks/hello-world.yaml@templates
       parameters:
         command: $(Build.BuildNumber)
+    
+    - template: tasks/azcli-group-task.yaml@templates
+      parameters:
+        azureSubscriptionName: ${{ variables.azureServiceConnection}}
+        command: 'create'
+        resourceGroupName: ${{ variables.resourceGroupName }}
 
-    - template: tasks/azcli-deploy-group-task.yaml@templates
+    - template: tasks/azcli-deployment-group-task.yaml@templates
       parameters:
         azureSubscriptionName: ${{ variables.azureServiceConnection}}
         templateFileName: '$(Pipeline.Workspace)/${{ variables.templateFileName }}.bicep'
