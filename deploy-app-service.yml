@@ -58,8 +58,8 @@ stages:
       parameters:
         azureSubscriptionName: '${{ variables.azureServiceConnection}}'
         location: '${{ variables.location }}'
-        templateFileName: '$(Pipeline.Workspace)/iac/${{ variables.templateFileName }}.bicep'
-        parametersFileName: '$(Pipeline.Workspace)/iac/parameters/${{ variables.environmentName }}.${{ variables.regionAbrv }}.${{ variables.templateFileName }}.parameters.json'
+        templateFileName: '$(Build.SourcesDirectory)/iac/${{ variables.templateFileName }}.bicep'
+        parametersFileName: '$(Build.SourcesDirectory)/iac/parameters/${{ variables.environmentName }}.${{ variables.regionAbrv }}.${{ variables.templateFileName }}.parameters.json'
         command: 'create'
         additionalArguments: '--out yamlc'
         deploymentName: '${{ variables.deploymentName }}'
