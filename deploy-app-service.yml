@@ -43,7 +43,7 @@ stages:
     steps:
     - checkout: self
 
-    - script: ls -ltr $(Build.SourcesDirectory)/iac/parameters/${{ variables.environmentName }}.${{ variables.regionAbrv }}.${{ variables.templateFileName }}.parameters.json
+    - script: ls -ltr $(Build.SourcesDirectory)/iac/${{ variables.templateFileName }}.bicep
     
     - template: tasks/hello-world.yaml@templates
       parameters:
