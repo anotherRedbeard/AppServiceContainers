@@ -42,7 +42,8 @@ stages:
 
     steps:
     - checkout: self
-    - script: ls -ltr $(Build.SourcesDirectory)/iac
+
+    - script: ls -ltr $(Build.SourcesDirectory)/iac/parameters/${{ variables.environmentName }}.${{ variables.regionAbrv }}.${{ variables.templateFileName }}.parameters.json
     
     - template: tasks/hello-world.yaml@templates
       parameters:
