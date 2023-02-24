@@ -64,18 +64,6 @@ stages:
         additionalArguments: '--out yamlc'
         deploymentName: '${{ variables.deploymentName }}'
         resourceGroupName: '${{ variables.resourceGroupName }}'
-    - task: AzureCLI@2
-      inputs:
-        azureSubscription: $(azureServiceConnection)
-        scriptType: bash
-        scriptLocation: inlineScript
-        useGlobalConfig: false
-        inlineScript: |
-          az --version
-          az group create -l ${{ variables.location }} -n ${{ variables.resourceGroupName}}
-          az deployment group create --resource-group ${{ variables.resourceGroupName }} \
-          --template-file ./iac/main-deploy-app-service.bicep \
-          --parameters app_service_postfix=${{ variables.appServicePostfix }} app_service_sku=${{ variables.appServiceSKU }}
 
 - stage: build_app_container
   displayName: 'build app service container stage'
