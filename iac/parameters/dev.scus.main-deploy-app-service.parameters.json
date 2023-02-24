@@ -3,7 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "app_service_postfix": {
-            "value": "todoapict-dev"
+            "value": "todo-dev"
         },
         "app_service_sku": {
             "value": "B1"
