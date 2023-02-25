@@ -125,7 +125,7 @@ stages:
                 displayName: 'Azure Web App on Container Deploy'
                 inputs:
                   azureSubscription: ${{ variables.azureServiceConnection }}
-                  appName: ${{ variables.APP_NAME }}
+                  appName: $(APP_NAME)
                   imageName: ${{ variables.fullImageName }}
 
               - script: echo Hi dev!
