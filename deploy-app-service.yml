@@ -74,6 +74,8 @@ stages:
         inlineScript: |
           echo "##vso[task.setvariable issecret=true;variable=APP_NAME]$(az deployment group show -g red-scus-appservicedemo-dev -n ${{ variables.deploymentName }} --query properties.outputs.appServiceName.value --out tsv)"
           echo "##vso[task.setvariable issecret=true;variable=APP_PLAN_NAME]$(az deployment group show -g red-scus-appservicedemo-dev -n ${{ variables.deploymentName }} --query properties.outputs.appServiceName.value --out tsv)"
+          echo "app name: $APP_NAME"
+          echo "app plan name: $APP_PLAN_NAME"
 
 - stage: build_app_container
   displayName: 'build app service container stage'
