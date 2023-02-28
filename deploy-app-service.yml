@@ -10,6 +10,7 @@ variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
   azureContainerRegistryConnection: 'AppServiceDeploymentDemoACR'
   resourceGroupName: 'red-scus-appservicedemo-dev'
+  acrResourceGroupName: 'red-scus-public-acr'
   location: 'southcentralus'
   templateFileName: 'main-deploy-app-service'
   environmentName: 'dev'
