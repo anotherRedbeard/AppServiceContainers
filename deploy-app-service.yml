@@ -108,8 +108,8 @@ stages:
                   scriptType: bash
                   scriptLocation: inlineScript
                   inlineScript: |
-                    echo "##vso[task.setvariable issecret=true;variable=ACR_USERNAME]$(az acr credential show -n ${{ variables.containerRegistryName }} --query username --out tsv)"
-                    echo "##vso[task.setvariable issecret=true;variable=ACR_PASSWORD]$(az acr credential show -n ${{ variables.containerRegistryName }} --query passwords[0].value --out tsv)"
+                    echo "##vso[task.setvariable issecret=true;variable=ACR_USERNAME]$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.resourceGroupName }} --query username --out tsv)"
+                    echo "##vso[task.setvariable issecret=true;variable=ACR_PASSWORD]$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.resourceGroupName }} --query passwords[0].value --out tsv)"
               
               - task: AzureCLI@2
                 displayName: Get AppName
