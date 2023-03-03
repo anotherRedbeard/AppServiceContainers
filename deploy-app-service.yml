@@ -129,29 +129,7 @@ stages:
                   appName: $(APP_NAME)
                   imageName: ${{ variables.fullImageName }}
                   #best practice would be to use a Managed Identity instead of setting these ACR credentials here...this is just for an example of how
-                  appSettings: |
-                    [
-                      {
-                        "name": "DOCKER_REGISTRY_SERVER_PASSWORD",
-                        "value": "$(ACR_PASSWORD)",
-                        "slotSetting": false
-                      },
-                      {
-                        "name": "DOCKER_REGISTRY_SERVER_URL",
-                        "value": "${{ variables.containerRegistryName }}.azurecr.io", 
-                        "slotSetting": false
-                      },
-                      {
-                        "name": "DOCKER_REGISTRY_SERVER_USERNAME",
-                        "value": "$(ACR_USERNAME)",
-                        "slotSetting": false
-                      },
-                      {
-                        "name": "CorsAllowedHosts",
-                        "value": "*", 
-                        "slotSetting": false
-                      }
-                    ]
+                  appSettings: "-DOCKER_REGISTRY_SERVER_PASSWORD $(ACR_PASSWORD) -DOCKER_REGISTRY_SERVER_URL ${{ variables.containerRegistryName }}.azurecr.io -DOCKER_REGISTRY_SERVER_USERNAME $(ACR_USERNAME) -CorsAllowedHosts *"
 
               - script: echo Hi dev!
               #deploy to dev app service from container image in ACR
