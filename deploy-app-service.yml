@@ -79,13 +79,12 @@ stages:
     steps:
     - checkout: self
     
-    - task: Docker@2
-      displayName: Build and Push image
-      inputs:
-        containerRegistry: ${{ variables.azureContainerRegistryConnection }}
-        repository: $(containerImageName)
-        command: buildAndPush
-        Dockerfile: $(Build.SourcesDirectory)/src/Dockerfile
+    - template: tasks/docker-task.yaml@templates
+      parameters:
+        azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
+        repositoryName: '${{ variables.containerImageName }}'
+        command: 'buildAndPush'
+        dockerfileLocation: '$(Build.SourcesDirectory)/src/Dockerfile'
         tags: |
           $(imageTag)
           latest
