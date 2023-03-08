@@ -21,8 +21,8 @@ variables:
 
 resources:
   pipelines:
-    - pipeline: deploy-app-service
-      source: deploy-app-service-ci
+    - pipeline: build-deploy-appservice
+      source: build-deploy-appservice-ci
       trigger: 
         branches:
           include:
