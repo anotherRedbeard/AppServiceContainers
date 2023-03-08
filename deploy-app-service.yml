@@ -22,6 +22,7 @@ variables:
 resources:
   pipelines:
     - pipeline: deploy-app-service
+      source: deploy-app-service-ci
       trigger: 
         branches:
           include:
