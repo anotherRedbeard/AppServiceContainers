@@ -3,9 +3,6 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- master
-
 variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
   azureContainerRegistryConnection: 'AppServiceDeploymentDemoACR'
@@ -23,6 +20,12 @@ variables:
   System.Debug: true
 
 resources:
+  pipelines:
+    - pipeline: deploy-app-service
+      trigger: 
+        branches:
+          include:
+            - master
   repositories:
     - repository: templates
       endpoint: AnotherRedbeard
