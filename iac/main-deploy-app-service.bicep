@@ -31,7 +31,7 @@ module appService './app-service.bicep' = {
   params: {
     webAppName: app_service_postfix
     sku: app_service_sku
-    linuxFxVersion: 'DOTNETCORE|6'
+    linuxFxVersion: 'node|14-lts'
     location: location
     logwsid: logws.outputs.id
   }
