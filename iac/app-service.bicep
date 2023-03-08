@@ -58,9 +58,13 @@ resource appService 'Microsoft.Web/sites@2020-06-01' = {
       ]
     }
   }
+  identity: {
+    type: 'SystemAssigned'
+  }
 }
 
 // Return the app service name and farm name
 output appName string = appService.name
 output aspName string = appServicePlan.name
 output appInsightsName string = appi.name
+output managedIdentityId string = appService.identity.principalId

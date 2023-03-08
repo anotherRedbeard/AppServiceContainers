@@ -39,3 +39,4 @@ module appService './app-service.bicep' = {
 
 output appServiceName string = appService.outputs.appName
 output appServicePlanName string = appService.outputs.aspName
+output appServiceManagedIdentityName string = appService.outputs.managedIdentityId
