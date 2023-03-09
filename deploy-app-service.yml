@@ -131,7 +131,7 @@ stages:
                 inputs:
                   azureSubscription: ${{ variables.azureServiceConnection }}
                   appName: $(APP_NAME)
-                  imageName: ${{ variables.fullImageName }}
+                  imageName: ${{ variables.fullImageName }}:$(imageTag)
                   #best practice would be to use a Managed Identity instead of setting these ACR credentials here...this is just for an example of how
                   appSettings: "-DOCKER_REGISTRY_SERVER_PASSWORD $(ACR_PASSWORD) -DOCKER_REGISTRY_SERVER_URL ${{ variables.containerRegistryName }}.azurecr.io -DOCKER_REGISTRY_SERVER_USERNAME $(ACR_USERNAME) -CorsAllowedHosts *"
 
