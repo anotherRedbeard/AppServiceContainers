@@ -1,6 +1,7 @@
 param webAppName string = uniqueString(resourceGroup().id) // Generate unique String for web app name
 param sku string = 'F1' // The SKU of App Service Plan
 param linuxFxVersion string = 'node|14-lts' // The runtime stack of web app
+param aspKind string = 'app,linux,container' // The kind for container app service plan
 param location string = resourceGroup().location // Location for all resources
 param logwsid string
 var appServicePlanName = toLower('red-AppServicePlan-${webAppName}')
@@ -16,7 +17,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   sku: {
     name: sku
   }
-  kind: 'linux'
+  kind: aspKind
 }
 
 // Create application insights
