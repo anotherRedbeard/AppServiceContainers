@@ -16,6 +16,7 @@ resource appServicePlan 'Microsoft.Web/serverfarms@2020-06-01' = {
   sku: {
     name: sku
   }
+  kind: 'Linux,Container'
 }
 
 // Create application insights
