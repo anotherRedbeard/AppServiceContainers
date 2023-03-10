@@ -7,9 +7,6 @@
         },
         "app_service_sku": {
             "value": "B1"
-        },
-        "app_service_kind": {
-            "value": "app,linux,container"
         }
     }
 }

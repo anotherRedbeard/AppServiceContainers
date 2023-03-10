@@ -14,9 +14,6 @@ param app_service_postfix string
 @description('The name of the app service sku.')
 param app_service_sku string
 
-@description('The kind of the app service.')
-param app_service_kind string
-
 // =================================
 
 // Create Log Analytics workspace
@@ -34,10 +31,10 @@ module appService './app-service.bicep' = {
   params: {
     webAppName: app_service_postfix
     sku: app_service_sku
-    linuxFxVersion: 'node|14-lts'
+    //setting this to a placeholder value to avoid error see this issue:  https://github.com/microsoft/azure-pipelines-tasks/issues/14805
+    linuxFxVersion: 'DOCKER|alpine'
     location: location
     logwsid: logws.outputs.id
-    aspKind: app_service_kind
   }
 }
 
