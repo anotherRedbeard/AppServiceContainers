@@ -46,7 +46,7 @@ stages:
       environmentName: '${{ variables.environmentName }}'
       templateFileName: '${{ variables.templateFileName }}'
       templateDirectory: 'iac'
-      serviceName: 'app-service-container'
+      serviceName: 'app_service_container'
       regionAbrv: '${{ variables.regionAbrv }}'
       azureServiceConnection: '${{ variables.azureServiceConnection }}'
       location: '${{ variables.location }}'
