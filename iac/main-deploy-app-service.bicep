@@ -32,7 +32,8 @@ module appService './app-service.bicep' = {
     webAppName: app_service_postfix
     sku: app_service_sku
     //setting this to a placeholder value to avoid error see this issue:  https://github.com/microsoft/azure-pipelines-tasks/issues/14805
-    linuxFxVersion: 'DOCKER|alpine'
+    //linuxFxVersion: 'DOCKER|alpine'
+    appServicePlanKind: 'Linux,Container'
     location: location
     logwsid: logws.outputs.id
   }
