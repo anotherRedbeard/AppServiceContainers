@@ -11,15 +11,6 @@ trigger:
     include:
     - '*'
 
-parameters:
-- name: dynamic_variables
-  type: object
-  default:
-    - variable_name: 'ACR_USERNAME1'
-      command: '$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.acrResourceGroupName }} --query username --out tsv)'
-    - variable_name: 'ACR_PASSWORD1'
-      command: '$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.acrResourceGroupName }} --query passwords[0].value --out tsv)'
-
 variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
   azureContainerRegistryConnection: 'AppServiceDeploymentDemoACR'
@@ -50,35 +41,16 @@ stages:
 - stage: build_infra_stage
   displayName: 'build infrastructor stage'
   jobs:
-  - job: build
-    displayName: 'build infrastructor for app service job'
-    pool:
-      vmImage: ubuntu-latest
-
-    steps:
-    - checkout: self
-
-    - template: tasks/hello-world.yaml@templates
-      parameters:
-        command: $(Build.BuildNumber)
-    
-    - template: tasks/azcli-group-task.yaml@templates
-      parameters:
-        azureSubscriptionName: '${{ variables.azureServiceConnection}}'
-        location: '${{ variables.location }}'
-        command: 'create'
-        resourceGroupName: '${{ variables.resourceGroupName }}'
-
-    - template: tasks/azcli-deployment-group-task.yaml@templates
-      parameters:
-        azureSubscriptionName: '${{ variables.azureServiceConnection}}'
-        location: '${{ variables.location }}'
-        templateFileName: '$(Build.SourcesDirectory)/iac/${{ variables.templateFileName }}.bicep'
-        parametersFileName: '$(Build.SourcesDirectory)/iac/parameters/${{ variables.environmentName }}.${{ variables.regionAbrv }}.${{ variables.templateFileName }}.parameters.json'
-        command: 'create'
-        additionalArguments: '--out yamlc'
-        deploymentName: '${{ variables.deploymentName }}'
-        resourceGroupName: '${{ variables.resourceGroupName }}'
+  - template: jobs/app-service-bicep-deployment@templates
+    parameters:
+      environmentName: '${{ variables.environmentName }}'
+      templateFileName: '${{ variables.templateFileName }}'
+      templateDirectory: 'iac'
+      serviceName: 'app-service-container'
+      regionAbrv: '${{ variables.regionAbrv }}'
+      azureServiceConnection: '${{ variables.azureServiceConnection }}'
+      location: '${{ variables.location }}'
+      resourceGroupName: '${{ variables.resourceGroupName }}'
 
 - stage: build_app_container
   displayName: 'build app service container stage'
@@ -114,17 +86,7 @@ stages:
       strategy:
         runOnce:
           deploy:
-            steps:
-              - ${{ each dynamic_variable in parameters.dynamic_variables }}:
-                - task: AzureCLI@2
-                  displayName: Get Container Registry Credentials
-                  inputs:
-                    azureSubscription: ${{ variables.azureServiceConnection }}
-                    scriptType: bash
-                    scriptLocation: inlineScript
-                    inlineScript: |
-                      echo "##vso[task.setvariable issecret=true;variable=${{ dynamic_variable.variable_name }}]${{ dynamic_variable.command }}"
-                      
+            steps:                      
               - task: AzureCLI@2
                 displayName: Get Container Registry Credentials
                 inputs:
