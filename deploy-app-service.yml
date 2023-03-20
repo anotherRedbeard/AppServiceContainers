@@ -55,26 +55,16 @@ stages:
 - stage: build_app_container
   displayName: 'build app service container stage'
   jobs:
-  - job: build
-    displayName: 'build app service container job'
-    variables:
-      imageTag: ${{ variables.version }}.$(Build.BuildNumber)
-    pool:
-      vmImage: ubuntu-latest
-
-    steps:
-    - checkout: self
-    
-    - template: tasks/docker-task.yaml@templates
-      parameters:
-        azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
-        repositoryName: '${{ variables.containerImageName }}'
-        command: 'buildAndPush'
-        dockerfileLocation: '$(Build.SourcesDirectory)/src/Dockerfile'
-        tags: |
-          $(imageTag)
-          latest
-
+  - template: jobs/app-build-container.yaml@templates
+    parameters:
+      environmentName: '${{ variables.environmentName }}'
+      serviceName: 'app_service_container'
+      regionAbrv: '${{ variables.regionAbrv }}'
+      azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
+      containerImageName: '${{ variables.containerImageName }}'
+      version: '${{ variables.version }}'
+      dockerFilePath: '$(Build.SourcesDirectory)/src/'
+      
 - stage: deploy_stage_dev
   displayName: 'Deploy to dev'
   jobs:
