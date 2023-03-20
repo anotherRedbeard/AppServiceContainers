@@ -41,7 +41,7 @@ stages:
 - stage: build_infra_stage
   displayName: 'build infrastructor stage'
   jobs:
-  - template: jobs/app-service-bicep-deployment@templates
+  - template: jobs/app-service-bicep-deploy@templates
     parameters:
       environmentName: '${{ variables.environmentName }}'
       templateFileName: '${{ variables.templateFileName }}'
