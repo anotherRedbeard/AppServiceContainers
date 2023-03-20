@@ -64,7 +64,7 @@ stages:
       containerImageName: '${{ variables.containerImageName }}'
       version: '${{ variables.version }}'
       dockerFilePath: '$(Build.SourcesDirectory)/src/'
-      
+
 - stage: deploy_stage_dev
   displayName: 'Deploy to dev'
   jobs:
