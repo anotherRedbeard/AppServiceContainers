@@ -11,6 +11,15 @@ trigger:
     include:
     - '*'
 
+parameters:
+- name: dynamic_variables
+  type: object
+  default:
+    - variable_name: 'ACR_USERNAME1'
+      command: '$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.acrResourceGroupName }} --query username --out tsv)'
+    - variable_name: 'ACR_PASSWORD1'
+      command: '$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.acrResourceGroupName }} --query passwords[0].value --out tsv)'
+
 variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
   azureContainerRegistryConnection: 'AppServiceDeploymentDemoACR'
@@ -106,6 +115,16 @@ stages:
         runOnce:
           deploy:
             steps:
+              - ${{ each dynamic_variable in parameters.dynamic_variables }}:
+                - task: AzureCLI@2
+                  displayName: Get Container Registry Credentials
+                  inputs:
+                    azureSubscription: ${{ variables.azureServiceConnection }}
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      echo "##vso[task.setvariable issecret=true;variable=${{ dynamic_variable.variable_name }}]${{ dynamic_variable.command }}"
+                      
               - task: AzureCLI@2
                 displayName: Get Container Registry Credentials
                 inputs:
