@@ -62,7 +62,7 @@ stages:
       regionAbrv: '${{ variables.regionAbrv }}'
       azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
       containerImageName: '${{ variables.containerImageName }}'
-      imageTagName: '${{ variables.version }}.$(Build.BuildId)'
+      imageTagName: '${{ variables.version }}.$(Build.BuildNumber)'
       dockerFilePath: '$(Build.SourcesDirectory)/src/'
 
 - stage: deploy_stage_dev
