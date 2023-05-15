@@ -42,17 +42,17 @@ stages:
   displayName: 'build infrastructor stage'
   jobs:
 
-  - ${{each envName in parameters.environments}}:
-    - template: jobs/app-service-bicep-deploy.yaml@templates
-      parameters:
-        environmentName: '${{ envName }}'
-        templateFileName: '${{ variables.templateFileName }}'
-        templateDirectory: 'iac'
-        serviceName: 'app_service_container'
-        regionAbrv: '${{ variables.regionAbrv }}'
-        azureServiceConnection: '${{ variables.azureServiceConnection }}'
-        location: '${{ variables.location }}'
-        resourceGroupName: '${{ variables.resourceGroupName }}'
+    - ${{each envName in parameters.environments}}:
+      - template: jobs/app-service-bicep-deploy.yaml@templates
+        parameters:
+          environmentName: '${{ envName }}'
+          templateFileName: '${{ variables.templateFileName }}'
+          templateDirectory: 'iac'
+          serviceName: 'app_service_container'
+          regionAbrv: '${{ variables.regionAbrv }}'
+          azureServiceConnection: '${{ variables.azureServiceConnection }}'
+          location: '${{ variables.location }}'
+          resourceGroupName: '${{ variables.resourceGroupName }}'
 
 - stage: build_app_container
   displayName: 'build app service container stage'
