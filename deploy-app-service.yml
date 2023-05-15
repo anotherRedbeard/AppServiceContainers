@@ -19,8 +19,8 @@ variables:
   location: 'southcentralus'
   templateFileName: 'main-deploy-app-service'
   environments: 
-    - dev
-    - qa
+    - "dev"
+    - "qa"
   regionAbrv: 'scus'
   deploymentName: 'App_Service_Deployments'
   containerRegistryName: 'redscuspublicctreg01'
