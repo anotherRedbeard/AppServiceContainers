@@ -18,7 +18,9 @@ variables:
   acrResourceGroupName: 'red-scus-public-acr'
   location: 'southcentralus'
   templateFileName: 'main-deploy-app-service'
-  environments: ['dev','qa']
+  environments: 
+    - dev
+    - qa
   regionAbrv: 'scus'
   deploymentName: 'App_Service_Deployments'
   containerRegistryName: 'redscuspublicctreg01'
