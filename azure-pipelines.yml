@@ -1,24 +1,16 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 variables:
-- name: regionAbbreviations
-  value:
-    scus: southcentralus
-    cus: centralus
-    eus2: eastus2
-- name: regionLongNames
-  value: $[join(values(variables.regionAbbreviations), ',')]
 - name: regionLookup
-  value: $[split(variables.regionLongNames, ',')]
+  value: |
+    {
+      "scus": "southcentralus",
+      "cus": "centralus",
+      "eus2": "eastus2"
+    }
 
 jobs:
-  - job: ExampleJob
-    steps:
-      - script: |
-          echo "The long name for region 'scus' is ${{ variables.regionLookup[0] }}"
-          echo "The long name for region 'cus' is ${{ variables.regionLookup[1] }}"
-          echo "The long name for region 'eus2' is ${{ variables.regionLookup[2] }}"
-
+- job: ExampleJob
+  steps:
+  - script: |
+      echo "The long name for region 'scus' is ${{ variables.regionLookup.scus }}"
+      echo "The long name for region 'cus' is ${{ variables.regionLookup.cus }}"
+      echo "The long name for region 'eus2' is ${{ variables.regionLookup.eus2 }}"
