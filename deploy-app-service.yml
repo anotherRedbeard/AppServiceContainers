@@ -49,16 +49,16 @@ stages:
 
     - ${{ each envObj in parameters.environmentObjects }}:
       - ${{ each regionObj in envObj }}:
-      - template: jobs/app-service-bicep-deploy.yaml@templates
-        parameters:
-          environmentName: '${{ envObj.envName }}'
-          templateFileName: '${{ variables.templateFileName }}'
-          templateDirectory: 'iac'
-          serviceName: 'app_service_container'
-          regionAbrv: '${{ regionObj.abrv }}'
-          location: '${{ regionObj.shortName }}'
-          azureServiceConnection: '${{ variables.azureServiceConnection }}'
-          resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
+        - template: jobs/app-service-bicep-deploy.yaml@templates
+          parameters:
+            environmentName: '${{ envObj.envName }}'
+            templateFileName: '${{ variables.templateFileName }}'
+            templateDirectory: 'iac'
+            serviceName: 'app_service_container'
+            regionAbrv: '${{ regionObj.abrv }}'
+            location: '${{ regionObj.shortName }}'
+            azureServiceConnection: '${{ variables.azureServiceConnection }}'
+            resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
 
 - stage: build_app_container
   displayName: 'build app service container stage'
