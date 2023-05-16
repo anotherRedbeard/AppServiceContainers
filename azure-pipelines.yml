@@ -1,5 +1,9 @@
 variables:
-  regionLookup: { scus: southcentralus, cus: centralus, eus2: eastus2 }
+  - name: regionLookup
+    value: |
+      scus: southcentralus
+      cus: centralus
+      eus2: eastus2
 
 jobs:
   - job: ExampleJob
