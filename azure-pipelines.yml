@@ -9,6 +9,6 @@ jobs:
   - job: ExampleJob
     steps:
       - script: |
-          echo "The long name for region 'scus' is ${REGION_LOOKUP['scus']}"
-          echo "The long name for region 'cus' is ${REGION_LOOKUP['cus']}"
-          echo "The long name for region 'eus2' is ${REGION_LOOKUP['eus2']}"
+          echo "The long name for region 'scus' is ${regionLookup['scus']}"
+          echo "The long name for region 'cus' is ${regionLookup['cus']}"
+          echo "The long name for region 'eus2' is ${regionLookup['eus2']}"
