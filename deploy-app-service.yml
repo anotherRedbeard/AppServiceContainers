@@ -13,11 +13,11 @@ parameters:
     - envName: 'dev'
       region:
         - abrv: 'scus'
-        - shortName: 'southcentralus'
+          shortName: 'southcentralus'
     - envName: 'test'
       region:
         - abrv: 'scus'
-        - shortName: 'foo'
+          shortName: 'southcentralus'
 
 variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
@@ -55,7 +55,7 @@ stages:
           templateDirectory: 'iac'
           serviceName: 'app_service_container'
           regionAbrv: '${{ envObj.region[0].abrv }}'
-          location: '${{ envObj.region[1].shortName }}'
+          location: '${{ envObj.region[0].shortName }}'
           azureServiceConnection: '${{ variables.azureServiceConnection }}'
           resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
 
