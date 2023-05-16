@@ -67,7 +67,6 @@ stages:
       environmentName: '${{ parameters.environmentObjects[0].envName }}'
       serviceName: 'app_service_container'
       regionAbrv: '${{ parameters.environmentObjects[0].regionAbrv }}'
-      location: '${{ parameters.environmentObjects[0].region.shortName }}'
       azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
       containerImageName: '${{ variables.containerImageName }}'
       imageTagName: '${{ variables.version }}.$(Build.BuildNumber)'
