@@ -54,8 +54,8 @@ stages:
           templateFileName: '${{ variables.templateFileName }}'
           templateDirectory: 'iac'
           serviceName: 'app_service_container'
-          regionAbrv: '${{ envObj.region.abrv }}'
-          location: '${{ envObj.region.shortName }}'
+          regionAbrv: '${{ envObj.region[0].abrv }}'
+          location: '${{ envObj.region[0].shortName }}'
           azureServiceConnection: '${{ variables.azureServiceConnection }}'
           resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
 
