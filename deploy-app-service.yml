@@ -11,15 +11,21 @@ trigger:
     include:
     - '*'
 
+parameters:
+- name: environmentObjects
+  type: object
+  default:
+    - envName: 'dev'
+      regionAbrv: 'scus'
+    - envName: 'qa'
+      regionAbrv: 'scus'
+
 variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
   azureContainerRegistryConnection: 'AppServiceDeploymentDemoACR'
   resourceGroupName: 'red-scus-appservicedemo'
   acrResourceGroupName: 'red-scus-public-acr'
-  location: 'southcentralus'
   templateFileName: 'main-deploy-app-service'
-  environments:'dev'
-  regionAbrv: 'scus'
   deploymentName: 'App_Service_Deployments'
   containerRegistryName: 'redscuspublicctreg01'
   containerImageName: 'todo-ct-api'
@@ -42,26 +48,25 @@ stages:
   displayName: 'build infrastructor stage'
   jobs:
 
-    - ${{each envName in variables.environments}}:
+    - ${{each envObj in parameters.environmentObjects}}:
       - template: jobs/app-service-bicep-deploy.yaml@templates
         parameters:
-          environmentName: '${{ envName }}'
+          environmentName: '${{ envObj.envName }}'
           templateFileName: '${{ variables.templateFileName }}'
           templateDirectory: 'iac'
           serviceName: 'app_service_container'
-          regionAbrv: '${{ variables.regionAbrv }}'
+          regionAbrv: '${{ envObj.regionAbrv }}'
           azureServiceConnection: '${{ variables.azureServiceConnection }}'
-          location: '${{ variables.location }}'
-          resourceGroupName: '${{ variables.resourceGroupName }}'
+          resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
 
 - stage: build_app_container
   displayName: 'build app service container stage'
   jobs:
   - template: jobs/app-build-container.yaml@templates
     parameters:
-      environmentName: '${{ variables.environmentName }}'
+      environmentName: '${{ parameters.environmentObjects[0].envName }}'
       serviceName: 'app_service_container'
-      regionAbrv: '${{ variables.regionAbrv }}'
+      regionAbrv: '${{ parameters.environmentObjects[0].regionAbrv }}'
       azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
       containerImageName: '${{ variables.containerImageName }}'
       imageTagName: '${{ variables.version }}.$(Build.BuildNumber)'
