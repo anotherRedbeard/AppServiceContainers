@@ -1,14 +1,10 @@
 variables:
-  - name: regionLookup
-    value: |
-      scus: southcentralus
-      cus: centralus
-      eus2: eastus2
+  regionLookup: { scus: southcentralus, cus: centralus, eus2: eastus2 }
 
 jobs:
   - job: ExampleJob
     steps:
       - script: |
-          echo "The long name for region 'scus' is ${{ variables.regionLookup['scus'] }}"
-          echo "The long name for region 'cus' is ${{ variables.regionLookup['cus'] }}"
-          echo "The long name for region 'eus2' is ${{ variables.regionLookup['eus2'] }}"
+          echo "The long name for region 'scus' is ${{ variables.regionLookup.scus }}"
+          echo "The long name for region 'cus' is ${{ variables.regionLookup.cus }}"
+          echo "The long name for region 'eus2' is ${{ variables.regionLookup.eus2 }}"
