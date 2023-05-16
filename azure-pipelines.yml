@@ -1,6 +1,5 @@
 variables:
-- name: regionLookup
-  value: |
+  regionLookup: |
     {
       "scus": "southcentralus",
       "cus": "centralus",
