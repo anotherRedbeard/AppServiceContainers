@@ -17,7 +17,7 @@ parameters:
     - envName: 'test'
       region:
         - abrv: 'scus'
-        - shortName: 'southcentralus'
+        - shortName: 'foo'
 
 variables:
   azureServiceConnection: 'AppServiceDeploymentDemo'
