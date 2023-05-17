@@ -52,7 +52,8 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existin
   name: container_registry_name
 }
 
-// Create role assignment
+// Create role assignment, you will need write access on the subscription to add this role assignment which is above 
+// the contributor role
 resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   name: guid(uniqueString(resourceGroup().id, 'acrRoleAssignment'))
   scope: acr
