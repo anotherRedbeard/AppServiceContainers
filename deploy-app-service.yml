@@ -42,8 +42,8 @@ resources:
 
 stages:
   - ${{ each envObj in parameters.environmentObjects }}:
-    - stage: 'build_infra_stage_${{ envObj.envName }}'
-      displayName: 'build infrastructure stage ${{ envObj.envName }}'
+    - stage: 'build_${{ envObj.envName }}_infra_stage'
+      displayName: 'Build ${{ envObj.envName }} infrastructure stage'
       jobs:
         - template: jobs/app-service-bicep-deploy.yaml@templates
           parameters:
@@ -58,8 +58,8 @@ stages:
             appServiceDeploymentName: ${{ variables.appServiceDeploymentName }}
 
   - ${{ each envObj in parameters.environmentObjects }}:
-    - stage: 'build_app_container_${{ envObj.envName }}'
-      displayName: 'build app service container stage ${{ envObj.envName }}'
+    - stage: 'build_${{ envObj.envName }}_app_container'
+      displayName: 'Build ${{ envObj.envName }} app service container stage'
       jobs:
       - template: jobs/app-build-push-container.yaml@templates
         parameters:
