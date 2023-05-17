@@ -120,18 +120,3 @@ stages:
                 - script: echo Hi dev!
                 #deploy to dev app service from container image in ACR
 
-- stage: deploy_stage_test
-  displayName: 'Deploy to test'
-  jobs:
-    - deployment: deploy_test
-      displayName: 'Deploy to test'
-      pool:
-        vmImage: ubuntu-latest
-      environment: test
-      strategy:
-        runOnce:
-          deploy:
-            steps:
-              - script: echo Hi test!
-              #tag image as test
-              #deploy to test app service from container image in ACR
