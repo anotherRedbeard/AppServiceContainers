@@ -43,6 +43,8 @@ stages:
   - ${{ each envObj in parameters.environmentObjects }}:
     - stage: 'build_${{ envObj.envName }}_infra_stage'
       displayName: 'Build ${{ envObj.envName }} infrastructure stage'
+      variables:
+        imageName: '${{ variables.containerImageName }}  ${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}-${{ envObj.envName }}:${{ variables.version }}.$(Build.BuildNumber)'
       jobs:
         - template: jobs/app-service-bicep-deploy.yaml@templates
           parameters:
@@ -55,7 +57,7 @@ stages:
             azureServiceConnection: '${{ variables.azureServiceConnection }}'
             resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
             appServiceDeploymentName: ${{ variables.appServiceDeploymentName }}
-            appContainerImageName: '${{ variables.containerImageName }}-${{ envObj.envName }}'
+            appContainerImageName: '${{ variables.imageName }}'
 
   - ${{ each envObj in parameters.environmentObjects }}:
     - stage: 'build_${{ envObj.envName }}_app_container'
@@ -76,6 +78,7 @@ stages:
       displayName: 'Deploy to ${{ envObj.envName }}'
       variables:
         rgName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
+        imageName: '${{ variables.containerImageName }}  ${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}-${{ envObj.envName }}:${{ variables.version }}.$(Build.BuildNumber)'
       jobs:
         - deployment: 'deploy_${{ envObj.envName }}'
           displayName: 'Deploy to ${{ envObj.envName }}'
@@ -111,7 +114,7 @@ stages:
                     inputs:
                       azureSubscription: ${{ variables.azureServiceConnection }}
                       appName: $(APP_NAME)
-                      imageName:   ${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}-${{ envObj.envName }}:${{ variables.version }}.$(Build.BuildNumber)
+                      imageName: ${{ variables.imageName }}
                       #best practice would be to use a Managed Identity instead of setting these ACR credentials here...this is just for an example of how
                       appSettings: "-DOCKER_REGISTRY_SERVER_PASSWORD $(ACR_PASSWORD) -DOCKER_REGISTRY_SERVER_URL ${{ variables.containerRegistryName }}.azurecr.io -DOCKER_REGISTRY_SERVER_USERNAME $(ACR_USERNAME) -CorsAllowedHosts *"
 
