@@ -29,7 +29,6 @@ variables:
   containerRegistryName: 'redscuspublicctreg01'
   containerImageName: 'todo-ct-api'
   version: 'v1.0'
-  fullImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}:${{ variables.version }}.$(Build.BuildNumber)'
   System.Debug: true
 
 resources:
@@ -56,6 +55,7 @@ stages:
             azureServiceConnection: '${{ variables.azureServiceConnection }}'
             resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
             appServiceDeploymentName: ${{ variables.appServiceDeploymentName }}
+            appContainerImageName: '${{ variables.containerImageName }}-${{ envObj.envName }}'
 
   - ${{ each envObj in parameters.environmentObjects }}:
     - stage: 'build_${{ envObj.envName }}_app_container'

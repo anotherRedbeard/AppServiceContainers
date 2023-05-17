@@ -17,6 +17,9 @@ param app_service_sku string
 @description('The name of the deployment for the app service.')
 param app_service_deployment_name string = 'AppServiceDeployment'
 
+@description('The name of the container image to deploy.')
+param app_container_image_name string = 'mcr.microsoft.com/azuredocs/aci-helloworld'
+
 // =================================
 
 // Create Log Analytics workspace
@@ -37,6 +40,7 @@ module appService './app-service.bicep' = {
     appServicePlanKind: 'Linux,Container'
     location: location
     logwsid: logws.outputs.id
+    linuxFxVersion: 'DOCKER|${app_container_image_name}'
   }
 }
 
