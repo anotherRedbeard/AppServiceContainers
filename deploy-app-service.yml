@@ -103,8 +103,8 @@ stages:
                       scriptType: bash
                       scriptLocation: inlineScript
                       inlineScript: |
-                        echo "##vso[task.setvariable variable=APP_NAME]$(az deployment group show -g ${{ variables.rgName }} -n ${{ variables.appServiceDeploymentName }} --query properties.outputs.appServiceName.value --out tsv)"
-                        echo "##vso[task.setvariable variable=APP_PLAN_NAME]$(az deployment group show -g ${{ variables.rgName }} -n ${{ variables.appServiceDeploymentName }} --query properties.outputs.appServiceName.value --out tsv)"
+                        echo "##vso[task.setvariable variable=APP_NAME]$(az deployment group show -g ${{ variables.rgName }} -n ${{ variables.appServiceDeploymentName }} --query properties.outputs.appName.value --out tsv)"
+                        echo "##vso[task.setvariable variable=APP_PLAN_NAME]$(az deployment group show -g ${{ variables.rgName }} -n ${{ variables.appServiceDeploymentName }} --query properties.outputs.aspName.value --out tsv)"
                   
                   - task: AzureWebAppContainer@1
                     displayName: 'Azure Web App on Container Deploy'
