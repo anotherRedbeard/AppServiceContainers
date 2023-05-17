@@ -39,15 +39,11 @@ resources:
       type: github
       name: AnotherRedbeard/TheOneYamlAzDO
 
-#jobs:
-#- template: common.yml@templates  # Template reference
-
-stages:
-- stage: build_infra_stage
-  displayName: 'build infrastructure stage'
-  jobs:
-
-    - ${{ each envObj in parameters.environmentObjects }}:
+- ${{ each envObj in parameters.environmentObjects }}:
+  stages:
+  - stage: 'build_infra_stage_${{ envObj.envName }}'
+    displayName: 'build infrastructure stage ${{ envObj.envName }}'
+    jobs:
       - template: jobs/app-service-bicep-deploy.yaml@templates
         parameters:
           environmentName: '${{ envObj.envName }}'
@@ -59,10 +55,10 @@ stages:
           azureServiceConnection: '${{ variables.azureServiceConnection }}'
           resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
 
-- stage: build_app_container
-  displayName: 'build app service container stage'
-  jobs:
-  - ${{ each envObj in parameters.environmentObjects }}:
+- ${{ each envObj in parameters.environmentObjects }}:
+  - stage: 'build_app_container_${{ envObj.envName }}'
+    displayName: 'build app service container stage ${{ envObj.envName }}'
+    jobs:
     - template: jobs/app-build-push-container.yaml@templates
       parameters:
         environmentName: '${{ envObj.envName }}'
