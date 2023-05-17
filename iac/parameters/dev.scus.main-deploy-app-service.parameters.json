@@ -7,6 +7,9 @@
         },
         "app_service_sku": {
             "value": "B1"
+        },
+        "container_registry_name": {
+            "value": "redscuspublicctreg01"
         }
     }
 }

@@ -20,6 +20,9 @@ param app_service_deployment_name string = 'AppServiceDeployment'
 @description('The name of the container image to deploy.')
 param app_container_image_name string = 'mcr.microsoft.com/azuredocs/aci-helloworld'
 
+@description('The name of the container registry.')
+param container_registry_name string
+
 // =================================
 
 // Create Log Analytics workspace
@@ -41,6 +44,23 @@ module appService './app-service.bicep' = {
     location: location
     logwsid: logws.outputs.id
     linuxFxVersion: 'DOCKER|${app_container_image_name}'
+  }
+}
+
+//existing acr
+resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+  name: container_registry_name
+}
+
+// Create role assignment
+resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(uniqueString(resourceGroup().id, 'acrRoleAssignment'))
+  scope: acr
+  properties: {
+    description: 'Assign AcrPull role to app service'
+    principalId: appService.outputs.managedIdentityId
+    //pulled from https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#acrpull
+    roleDefinitionId: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
   }
 }
 
