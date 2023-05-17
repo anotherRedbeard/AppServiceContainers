@@ -14,6 +14,9 @@ param app_service_postfix string
 @description('The name of the app service sku.')
 param app_service_sku string
 
+@description('The name of the deployment for the app service.')
+param app_service_deployment_name string = 'AppServiceDeployment'
+
 // =================================
 
 // Create Log Analytics workspace
@@ -27,7 +30,7 @@ module logws './log-analytics-ws.bicep' = {
 
 // Create app service
 module appService './app-service.bicep' = {
-  name: 'AppServiceDeployment'
+  name: app_service_deployment_name
   params: {
     webAppName: app_service_postfix
     sku: app_service_sku
