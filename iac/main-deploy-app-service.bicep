@@ -23,6 +23,9 @@ param app_container_image_name string = 'mcr.microsoft.com/azuredocs/aci-hellowo
 @description('The name of the container registry.')
 param container_registry_name string
 
+@description('The name of the container registry resource group.')
+param acr_resource_group_name string
+
 // =================================
 
 // Create Log Analytics workspace
@@ -47,21 +50,16 @@ module appService './app-service.bicep' = {
   }
 }
 
-//existing acr
-resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
-  name: container_registry_name
-}
-
-// Create role assignment, you will need write access on the subscription to add this role assignment which is above 
-// the contributor role
-resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(uniqueString(resourceGroup().id, 'acrRoleAssignment'))
-  scope: acr
-  properties: {
-    description: 'Assign AcrPull role to app service'
-    principalId: appService.outputs.managedIdentityId
+// Create role assignment
+module acrPullRoleAssignment './role-assignment.bicep' = {
+  name: 'AcrPullRoleAssignment'
+  scope: resourceGroup(acr_resource_group_name)
+  params: {
+    managedIdentityId: appService.outputs.managedIdentityId
+    container_registry_name: container_registry_name
+    //acr_resource_group_name: acr_resource_group_name
     //pulled from https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#acrpull
-    roleDefinitionId: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+    role_definition_id: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
   }
 }
 

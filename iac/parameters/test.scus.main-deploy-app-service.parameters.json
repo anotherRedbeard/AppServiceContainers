@@ -10,6 +10,9 @@
         },
         "container_registry_name": {
             "value": "redscuspublicctreg01"
+        },
+        "acr_resource_group_name": {
+            "value": "red-scus-public-acr"
         }
     }
 }
