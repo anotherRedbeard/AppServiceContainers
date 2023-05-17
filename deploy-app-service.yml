@@ -44,7 +44,7 @@ resources:
 
 stages:
 - stage: build_infra_stage
-  displayName: 'build infrastructor stage'
+  displayName: 'build infrastructure stage'
   jobs:
 
     - ${{ each envObj in parameters.environmentObjects }}:
@@ -62,59 +62,63 @@ stages:
 - stage: build_app_container
   displayName: 'build app service container stage'
   jobs:
-  - template: jobs/app-build-container.yaml@templates
-    parameters:
-      environmentName: '${{ parameters.environmentObjects[0].envName }}'
-      serviceName: 'app_service_container'
-      regionAbrv: '${{ parameters.environmentObjects[0].region[0].abrv }}'
-      azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
-      containerImageName: '${{ variables.containerImageName }}'
-      imageTagName: '${{ variables.version }}.$(Build.BuildNumber)'
-      dockerFilePath: '$(Build.SourcesDirectory)/src/'
+  - ${{ each envObj in parameters.environmentObjects }}:
+    - template: jobs/app-build-push-container.yaml@templates
+      parameters:
+        environmentName: '${{ envObj.envName }}'
+        serviceName: 'app_service_container'
+        regionAbrv:  '${{ envObj.region[0].abrv }}'
+        azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
+        containerImageName: '${{ variables.containerImageName }}-${{ envObj.envName }}'
+        imageTagName: '${{ variables.version }}.$(Build.BuildNumber)'
+        dockerFilePath: '$(Build.SourcesDirectory)/src/'
 
-- stage: deploy_stage_dev
-  displayName: 'Deploy to dev'
-  jobs:
-    - deployment: deploy_dev
-      displayName: 'Deploy to dev'
-      pool:
-        vmImage: ubuntu-latest
-      environment: dev
-      strategy:
-        runOnce:
-          deploy:
-            steps:                      
-              - task: AzureCLI@2
-                displayName: Get Container Registry Credentials
-                inputs:
-                  azureSubscription: ${{ variables.azureServiceConnection }}
-                  scriptType: bash
-                  scriptLocation: inlineScript
-                  inlineScript: |
-                    echo "##vso[task.setvariable issecret=true;variable=ACR_USERNAME]$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.acrResourceGroupName }} --query username --out tsv)"
-                    echo "##vso[task.setvariable issecret=true;variable=ACR_PASSWORD]$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.acrResourceGroupName }} --query passwords[0].value --out tsv)"
-              
-              - task: AzureCLI@2
-                displayName: Get AppName
-                inputs:
-                  azureSubscription: ${{ variables.azureServiceConnection }}
-                  scriptType: bash
-                  scriptLocation: inlineScript
-                  inlineScript: |
-                    echo "##vso[task.setvariable variable=APP_NAME]$(az deployment group show -g ${{ variables.resourceGroupName }} -n ${{ variables.deploymentName }} --query properties.outputs.appServiceName.value --out tsv)"
-                    echo "##vso[task.setvariable variable=APP_PLAN_NAME]$(az deployment group show -g ${{ variables.resourceGroupName }} -n ${{ variables.deploymentName }} --query properties.outputs.appServiceName.value --out tsv)"
-              
-              - task: AzureWebAppContainer@1
-                displayName: 'Azure Web App on Container Deploy'
-                inputs:
-                  azureSubscription: ${{ variables.azureServiceConnection }}
-                  appName: $(APP_NAME)
-                  imageName: ${{ variables.fullImageName }}
-                  #best practice would be to use a Managed Identity instead of setting these ACR credentials here...this is just for an example of how
-                  appSettings: "-DOCKER_REGISTRY_SERVER_PASSWORD $(ACR_PASSWORD) -DOCKER_REGISTRY_SERVER_URL ${{ variables.containerRegistryName }}.azurecr.io -DOCKER_REGISTRY_SERVER_USERNAME $(ACR_USERNAME) -CorsAllowedHosts *"
+- ${{ each envObj in parameters.environmentObjects }}:
+  - stage: 'deploy_stage_${{ envObj.envName }}'
+    displayName: 'Deploy to ${{ envObj.envName }}'
+    variables:
+      rgName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
+    jobs:
+      - deployment: 'deploy_${{ envObj.envName }}'
+        displayName: 'Deploy to ${{ envObj.envName }}'
+        pool:
+          vmImage: ubuntu-latest
+        environment: ${{ envObj.envName }}
+        strategy:
+          runOnce:
+            deploy:
+              steps:                      
+                - task: AzureCLI@2
+                  displayName: Get Container Registry Credentials
+                  inputs:
+                    azureSubscription: ${{ variables.azureServiceConnection }}
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      echo "##vso[task.setvariable issecret=true;variable=ACR_USERNAME]$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.acrResourceGroupName }} --query username --out tsv)"
+                      echo "##vso[task.setvariable issecret=true;variable=ACR_PASSWORD]$(az acr credential show -n ${{ variables.containerRegistryName }} -g ${{ variables.acrResourceGroupName }} --query passwords[0].value --out tsv)"
+                
+                - task: AzureCLI@2
+                  displayName: Get AppName
+                  inputs:
+                    azureSubscription: ${{ variables.azureServiceConnection }}
+                    scriptType: bash
+                    scriptLocation: inlineScript
+                    inlineScript: |
+                      echo "##vso[task.setvariable variable=APP_NAME]$(az deployment group show -g ${{ variables.rgName }} -n ${{ variables.deploymentName }} --query properties.outputs.appServiceName.value --out tsv)"
+                      echo "##vso[task.setvariable variable=APP_PLAN_NAME]$(az deployment group show -g ${{ variables.rgName }} -n ${{ variables.deploymentName }} --query properties.outputs.appServiceName.value --out tsv)"
+                
+                - task: AzureWebAppContainer@1
+                  displayName: 'Azure Web App on Container Deploy'
+                  inputs:
+                    azureSubscription: ${{ variables.azureServiceConnection }}
+                    appName: $(APP_NAME)
+                    imageName:   ${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}-${{ envObj.envName }}:${{ variables.version }}.$(Build.BuildNumber)
+                    #best practice would be to use a Managed Identity instead of setting these ACR credentials here...this is just for an example of how
+                    appSettings: "-DOCKER_REGISTRY_SERVER_PASSWORD $(ACR_PASSWORD) -DOCKER_REGISTRY_SERVER_URL ${{ variables.containerRegistryName }}.azurecr.io -DOCKER_REGISTRY_SERVER_USERNAME $(ACR_USERNAME) -CorsAllowedHosts *"
 
-              - script: echo Hi dev!
-              #deploy to dev app service from container image in ACR
+                - script: echo Hi dev!
+                #deploy to dev app service from container image in ACR
 
 - stage: deploy_stage_test
   displayName: 'Deploy to test'
