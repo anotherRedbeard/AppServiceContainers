@@ -27,7 +27,7 @@ resource roleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-prev
 // Create role assignment, you will need write access on the subscription to add this role assignment which is above 
 // the contributor role
 resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
-  name: guid(uniqueString(resourceGroup().id, role_assignment_name))
+  name: guid(uniqueString(resourceGroup().id, managedIdentityId, role_assignment_name))
   scope: acr
   properties: {
     description: role_assignment_desc
