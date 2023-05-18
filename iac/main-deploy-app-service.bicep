@@ -57,9 +57,10 @@ module acrPullRoleAssignment './role-assignment.bicep' = {
   params: {
     managedIdentityId: appService.outputs.managedIdentityId
     container_registry_name: container_registry_name
-    //acr_resource_group_name: acr_resource_group_name
     //pulled from https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles#acrpull
     role_definition_id: '7f951dda-4ed3-4680-a7ca-43fe172d538d'
+    role_assignment_desc: 'Allow App Service to pull from ACR'
+    role_assignment_name: 'AcrPullRoleAssignment'
   }
 }
 
