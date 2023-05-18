@@ -85,7 +85,7 @@ stages:
             environmentName: '${{ envObj.envName }}'
             serviceName: 'app_service_container'
             regionAbrv:  '${{ envObj.region[0].abrv }}'
-            containerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
+            containerRegistryName: '${{ variables.containerRegistryName }}'
             azureServiceConnection: '${{ variables.azureServiceConnection }}'
             resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.evnName }}'
             acrResourceGroupName: '${{ variables.acrResourceGroupName }}'
