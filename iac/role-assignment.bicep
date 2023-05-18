@@ -15,6 +15,12 @@ resource acr 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existin
   name: container_registry_name
 }
 
+// Create role definition from the guid
+resource roleDefinition 'Microsoft.Authorization/roleDefinitions@2018-01-01-preview' existing = {
+  scope: subscription()
+  name: role_definition_id
+}
+
 // Create role assignment, you will need write access on the subscription to add this role assignment which is above 
 // the contributor role
 resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
@@ -23,6 +29,6 @@ resource acrRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-p
   properties: {
     description: 'Assign AcrPull role to app service'
     principalId: managedIdentityId
-    roleDefinitionId: role_definition_id
+    roleDefinitionId: roleDefinition.id
   }
 }
