@@ -80,7 +80,7 @@ stages:
         rgName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
         imageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}-${{ envObj.envName }}:${{ variables.version }}.$(Build.BuildNumber)'
       jobs:
-        - template: jobs/app-service-code-deploy.yaml@templates
+        - template: jobs/app-service-code-acr-mi-deploy.yaml@templates
           parameters:
             environmentName: '${{ envObj.envName }}'
             serviceName: 'app_service_container'
