@@ -69,8 +69,8 @@ stages:
           serviceName: 'app_service_container'
           regionAbrv:  '${{ envObj.region[0].abrv }}'
           azureContainerRegistryName: '${{ variables.azureContainerRegistryConnection }}'
-          containerImageName: '${{ variables.containerImageName }}-${{ envObj.envName }}'
-          imageTagName: '${{ variables.version }}.$(Build.BuildNumber)'
+          containerImageName: '${{ variables.containerImageName }}'
+          imageTagName: '${{ variables.version }}.$(Build.BuildNumber)-${{ envObj.envName }}'
           dockerFilePath: '$(Build.SourcesDirectory)/src/'
 
   - ${{ each envObj in parameters.environmentObjects }}:
