@@ -43,8 +43,6 @@ stages:
   - ${{ each envObj in parameters.environmentObjects }}:
     - stage: 'build_${{ envObj.envName }}_infra_stage'
       displayName: 'Build ${{ envObj.envName }} infrastructure stage'
-      variables:
-        imageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}-${{ envObj.envName }}:${{ variables.version }}.$(Build.BuildNumber)'
       jobs:
         - template: jobs/app-service-bicep-deploy.yaml@templates
           parameters:
@@ -57,7 +55,7 @@ stages:
             azureServiceConnection: '${{ variables.azureServiceConnection }}'
             resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
             appServiceDeploymentName: ${{ variables.appServiceDeploymentName }}
-            appContainerImageName: '${{ variables.imageName }}'
+            appContainerImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}:${{ variables.version }}.$(Build.BuildNumber)-${{ envObj.envName }}'
 
   - ${{ each envObj in parameters.environmentObjects }}:
     - stage: 'build_${{ envObj.envName }}_app_container'
@@ -78,7 +76,6 @@ stages:
       displayName: 'Deploy to ${{ envObj.envName }}'
       variables:
         rgName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
-        imageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}-${{ envObj.envName }}:${{ variables.version }}.$(Build.BuildNumber)'
       jobs:
         - template: jobs/app-service-code-acr-mi-deploy.yaml@templates
           parameters:
@@ -89,7 +86,7 @@ stages:
             azureServiceConnection: '${{ variables.azureServiceConnection }}'
             resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
             acrResourceGroupName: '${{ variables.acrResourceGroupName }}'
-            appContainerImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}-${{ envObj.envName }}:${{ variables.version }}.$(Build.BuildNumber)'
+            appContainerImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}:${{ variables.version }}.$(Build.BuildNumber)-${{ envObj.envName }}'
             
 #        - deployment: 'deploy_${{ envObj.envName }}'
 #          displayName: 'Deploy to ${{ envObj.envName }}'
