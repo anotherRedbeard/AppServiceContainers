@@ -14,7 +14,7 @@ parameters:
       region:
         - abrv: 'scus'
           shortName: 'southcentralus'
-    - envName: 'test'
+    - envName: 'tst'
       region:
         - abrv: 'scus'
           shortName: 'southcentralus'
