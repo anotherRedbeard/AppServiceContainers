@@ -56,8 +56,6 @@ stages:
             resourceGroupName: '${{ variables.resourceGroupName }}-${{ envObj.envName }}'
             appServiceDeploymentName: ${{ variables.appServiceDeploymentName }}
             appContainerImageName: '${{ variables.containerRegistryName }}.azurecr.io/${{ variables.containerImageName }}:${{ variables.version }}.$(Build.BuildNumber)-${{ envObj.envName }}'
-
-  - ${{ each envObj in parameters.environmentObjects }}:
     - stage: 'build_${{ envObj.envName }}_app_container'
       displayName: 'Build ${{ envObj.envName }} app service container stage'
       jobs:
@@ -70,8 +68,6 @@ stages:
           containerImageName: '${{ variables.containerImageName }}'
           imageTagName: '${{ variables.version }}.$(Build.BuildNumber)-${{ envObj.envName }}'
           dockerFilePath: '$(Build.SourcesDirectory)/src/'
-
-  - ${{ each envObj in parameters.environmentObjects }}:
     - stage: 'deploy_stage_${{ envObj.envName }}'
       displayName: 'Deploy to ${{ envObj.envName }}'
       variables:
